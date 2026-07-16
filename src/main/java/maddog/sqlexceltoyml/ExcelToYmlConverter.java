@@ -33,7 +33,7 @@ public class ExcelToYmlConverter {
         sourceDirPath = appPath != null ?
                 Path.of(appPath).getParent().getParent() // exe -> 專案資料夾 -> xlsx 資料夾 (exe 啟動 正式)
                 : Path.of("").toAbsolutePath(); // 啟動資料夾 (IDE 啟動 開發測試)
-        log.info("抓取 excel 的路徑為: {}", sourceDirPath);
+        log.info("抓取 excel 的資料夾路徑為: {}", sourceDirPath);
 
         try {
             // 取得 yml 輸出資料夾
@@ -57,6 +57,7 @@ public class ExcelToYmlConverter {
                         return fileName.endsWith(".xlsx") && !fileName.startsWith("~$");
                     })
                     .toList();
+            log.info("找到 {} 個 excel 檔", sourcePathList.size());
 
             // 將每個檔案進行轉換且驗證
             for (Path source : sourcePathList) {
@@ -67,7 +68,7 @@ public class ExcelToYmlConverter {
                     // 驗證 yml 檔是否合法
                     verifyYml(resultPath);
                 } else {
-                    log.warn("transform 失敗回傳 null ，跳過驗證步驟！");
+                    log.warn("{} transform 失敗回傳 null ，跳過驗證步驟！", getBaseName(source.getFileName().toString()));
                 }
             }
         } catch (Exception e) {
@@ -101,7 +102,7 @@ public class ExcelToYmlConverter {
 
         // 創建 StringBuilder 儲存結果
         StringBuilder result = new StringBuilder();
-        result.append("compare-sql-setting:\n").append("  tables:\n");
+        result.append(YML_HEADER);
 
         // 創建 StringBuilder 儲存結果記錄
         StringBuilder resultLog = new StringBuilder();
@@ -138,7 +139,7 @@ public class ExcelToYmlConverter {
 
                 if (row == null) { // 空白列
                     // 記錄錯誤
-                    buildResultLog(resultLog, i + 1, tableName, LOST_ROW);
+                    buildResultLog(resultLog, i + 1, tableName, LOG_LOST_ROW);
                     // 失敗記數
                     failed++;
 
@@ -153,7 +154,7 @@ public class ExcelToYmlConverter {
 
                     if (cell == null) { // 空白欄
                         // 記錄錯誤
-                        buildResultLog(resultLog, i + 1, tableName, LOST_CELL);
+                        buildResultLog(resultLog, i + 1, tableName, LOG_LOST_CELL);
                         // 失敗記數
                         failed++;
 
@@ -168,7 +169,7 @@ public class ExcelToYmlConverter {
 
                             if (StringUtils.isEmpty(tableName)) { // 資料表名稱 為空
                                 // 記錄錯誤
-                                buildResultLog(resultLog, i + 1, tableName, LOST_TABLE_NAME);
+                                buildResultLog(resultLog, i + 1, tableName, LOG_LOST_TABLE_NAME);
                                 // 失敗記數
                                 failed++;
 
@@ -185,7 +186,7 @@ public class ExcelToYmlConverter {
 
                             if (StringUtils.isEmpty(oraSql)) { // oracle SQL語法 為空
                                 // 記錄錯誤
-                                buildResultLog(resultLog, i + 1, tableName, LOST_SQL);
+                                buildResultLog(resultLog, i + 1, tableName, LOG_LOST_SQL);
                                 // 失敗記數
                                 failed++;
 
@@ -199,7 +200,7 @@ public class ExcelToYmlConverter {
 
                             if (StringUtils.isEmpty(ifxSql)) { // informix SQL語法 為空
                                 // 記錄錯誤
-                                buildResultLog(resultLog, i + 1, tableName, LOST_SQL);
+                                buildResultLog(resultLog, i + 1, tableName, LOG_LOST_SQL);
                                 // 失敗記數
                                 failed++;
 
@@ -251,7 +252,7 @@ public class ExcelToYmlConverter {
      */
     private static void verifyYml(Path ymlPath) {
         // 取得系統名
-        String systemName = ymlPath.getFileName().toString().split("\\.")[0];
+        String systemName = getBaseName(ymlPath.getFileName().toString());
 
         try (InputStream input = Files.newInputStream(ymlPath)) {
             Yaml yml = new Yaml();
@@ -282,15 +283,15 @@ public class ExcelToYmlConverter {
                                     String oraSql,
                                     String ifxSql) {
         // 資料表名稱
-        result.append(TABLE_NAME_ROW);
+        result.append(YML_TABLE_NAME_ROW);
         result.append(tableName).append("\n");
 
         // informix SQL語法
-        result.append(IFX_SQL_ROW);
+        result.append(YML_IFX_SQL_ROW);
         result.append(ifxSql).append("\n");
 
         // oracle SQL語法
-        result.append(ORA_SQL_ROW);
+        result.append(YML_ORA_SQL_ROW);
         result.append(oraSql).append("\n");
     }
 
@@ -364,6 +365,17 @@ public class ExcelToYmlConverter {
         // 總數
         resultLog.append(LOG_TOTAL_ROW);
         resultLog.append(total).append("\n");
+    }
+
+    /**
+     * 取得純檔名
+     *
+     * @param fileName
+     *          含附檔名檔名
+     * @return 純檔名
+     */
+    private static String getBaseName(String fileName){
+        return fileName.replaceAll("\\.[^.]+$", "");
     }
 
 }

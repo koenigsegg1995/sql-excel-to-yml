@@ -1,9 +1,11 @@
 package maddog.sqlexceltoyml.constant;
 
 /**
- * yml 顯示常數
+ * 顯示常數
  */
 public final class YmlConstant {
+
+    private YmlConstant(){}
 
     /**
      * 資料表名稱預設
@@ -11,19 +13,24 @@ public final class YmlConstant {
     public static final String DEFAULT_SYSTEM_NAME = "資料表名稱無系統名";
 
     /**
+     * yml 標題 (換行縮排 2 空白)
+     */
+    public static final String YML_HEADER = "compare-sql-setting:\n  tables:\n";
+
+    /**
      * yml table-name 列固定文字 (縮排 4 空白)
      */
-    public static final String TABLE_NAME_ROW = "    - table-name: ";
+    public static final String YML_TABLE_NAME_ROW = "    - table-name: ";
 
     /**
      * yml informix 語法列固定文字 (縮排 6 空白)
      */
-    public static final String IFX_SQL_ROW = "      ifx-sql: ";
+    public static final String YML_IFX_SQL_ROW = "      ifx-sql: ";
 
     /**
      * yml oracle SQL 列固定文字 (縮排 6 空白)
      */
-    public static final String ORA_SQL_ROW = "      ora-sql: ";
+    public static final String YML_ORA_SQL_ROW = "      ora-sql: ";
 
     /**
      * txt Log row-num 列固定文字
@@ -58,21 +65,21 @@ public final class YmlConstant {
     /**
      * txt Log description "空白列"
      */
-    public static final String LOST_ROW = "空白列";
+    public static final String LOG_LOST_ROW = "空白列";
 
     /**
      * txt Log description "資料表名稱為空"
      */
-    public static final String LOST_TABLE_NAME = "資料表名稱為空";
+    public static final String LOG_LOST_TABLE_NAME = "資料表名稱為空";
 
     /**
      * txt Log description "欄位為空"
      */
-    public static final String LOST_CELL = "欄位為空";
+    public static final String LOG_LOST_CELL = "欄位為空";
 
     /**
      * txt Log description "SQL 為空"
      */
-    public static final String LOST_SQL = "SQL 為空";
+    public static final String LOG_LOST_SQL = "SQL 為空";
     
 }
