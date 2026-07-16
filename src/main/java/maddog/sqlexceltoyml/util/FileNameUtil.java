@@ -3,9 +3,9 @@ package maddog.sqlexceltoyml.util;
 /**
  * 工具
  */
-public final class StringUtil {
+public final class FileNameUtil {
 
-    private StringUtil() {}
+    private FileNameUtil() {}
 
     /**
      * 取得純檔名

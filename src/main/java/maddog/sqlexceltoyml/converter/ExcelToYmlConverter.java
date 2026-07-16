@@ -3,7 +3,7 @@ package maddog.sqlexceltoyml.converter;
 import lombok.extern.slf4j.Slf4j;
 import maddog.sqlexceltoyml.builder.ExceptionLogBuilder;
 import maddog.sqlexceltoyml.builder.ResultBuilder;
-import maddog.sqlexceltoyml.util.StringUtil;
+import maddog.sqlexceltoyml.util.FileNameUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 
@@ -123,7 +123,7 @@ public class ExcelToYmlConverter {
                     // 取得關鍵字串
                     switch (j) {
                         case 0 -> { // 資料表名稱
-                            tableName = StringUtil.clearStr(formatter.formatCellValue(cell));
+                            tableName = FileNameUtil.clearStr(formatter.formatCellValue(cell));
 
                             if (StringUtils.isEmpty(tableName)) { // 資料表名稱 為空
                                 // 記錄錯誤
@@ -140,7 +140,7 @@ public class ExcelToYmlConverter {
                         }
 
                         case 1 -> { // oracle SQL語法 (移除換行符與非法空格)
-                            oraSql = StringUtil.clearStr(formatter.formatCellValue(cell));
+                            oraSql = FileNameUtil.clearStr(formatter.formatCellValue(cell));
 
                             if (StringUtils.isEmpty(oraSql)) { // oracle SQL語法 為空
                                 // 記錄錯誤
@@ -154,7 +154,7 @@ public class ExcelToYmlConverter {
                         }
 
                         case 2 -> { // informix SQL語法 (移除換行符與非法空格)
-                            ifxSql = StringUtil.clearStr(formatter.formatCellValue(cell));
+                            ifxSql = FileNameUtil.clearStr(formatter.formatCellValue(cell));
 
                             if (StringUtils.isEmpty(ifxSql)) { // informix SQL語法 為空
                                 // 記錄錯誤

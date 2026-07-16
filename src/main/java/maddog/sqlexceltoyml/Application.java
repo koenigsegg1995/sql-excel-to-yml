@@ -2,7 +2,7 @@ package maddog.sqlexceltoyml;
 
 import lombok.extern.slf4j.Slf4j;
 import maddog.sqlexceltoyml.converter.ExcelToYmlConverter;
-import maddog.sqlexceltoyml.util.StringUtil;
+import maddog.sqlexceltoyml.util.FileNameUtil;
 import maddog.sqlexceltoyml.validator.YmlValidator;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class Application {
                     // 驗證 yml 檔是否合法
                     ymlValidator.validate(resultPath);
                 } else {
-                    log.warn("{} convert 失敗回傳 null ，跳過驗證步驟！", StringUtil.getBaseName(source.getFileName().toString()));
+                    log.warn("{} convert 失敗回傳 null ，跳過驗證步驟！", FileNameUtil.getBaseName(source.getFileName().toString()));
                 }
             }
         } catch (Exception e) {
