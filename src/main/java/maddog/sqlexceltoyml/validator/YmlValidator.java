@@ -1,7 +1,7 @@
 package maddog.sqlexceltoyml.validator;
 
 import lombok.extern.slf4j.Slf4j;
-import maddog.sqlexceltoyml.util.Util;
+import maddog.sqlexceltoyml.util.StringUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -19,7 +19,7 @@ public class YmlValidator {
      */
     public void validate(Path ymlPath) {
         // 取得系統名
-        String systemName = Util.getBaseName(ymlPath.getFileName().toString());
+        String systemName = StringUtil.getBaseName(ymlPath.getFileName().toString());
 
         try (InputStream input = Files.newInputStream(ymlPath)) {
             Yaml yml = new Yaml();

@@ -3,9 +3,9 @@ package maddog.sqlexceltoyml.util;
 /**
  * 工具
  */
-public final class Util {
+public final class StringUtil {
 
-    private Util(){}
+    private StringUtil() {}
 
     /**
      * 取得純檔名
@@ -14,7 +14,7 @@ public final class Util {
      *          含附檔名檔名
      * @return 純檔名
      */
-    public static String getBaseName(String fileName){
+    public static String getBaseName (String fileName) {
         return fileName.replaceAll("\\.[^.]+$", "");
     }
 
@@ -26,7 +26,7 @@ public final class Util {
      * @return cleanStr
      *          合法字串 (基於合法 tableName 不會換行，僅用於去除頭尾空格)
      */
-    public static String clearStr(String oriStr) {
+    public static String clearStr (String oriStr) {
         return oriStr
                 .replaceAll("[\\r\\n\\t\\u00A0]+", " ")
                 .trim();

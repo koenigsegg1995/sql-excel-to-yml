@@ -3,7 +3,7 @@ package maddog.sqlexceltoyml.converter;
 import lombok.extern.slf4j.Slf4j;
 import maddog.sqlexceltoyml.builder.ExceptionLogBuilder;
 import maddog.sqlexceltoyml.builder.ResultBuilder;
-import maddog.sqlexceltoyml.util.Util;
+import maddog.sqlexceltoyml.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 
@@ -30,7 +30,7 @@ public class ExcelToYmlConverter {
      */
     private final ExceptionLogBuilder exceptionLogBuilder;
 
-    public ExcelToYmlConverter(){
+    public ExcelToYmlConverter() {
         resultBuilder = new ResultBuilder();
         exceptionLogBuilder = new ExceptionLogBuilder();
     }
@@ -47,9 +47,9 @@ public class ExcelToYmlConverter {
      * @return resultPath
      *          yml 檔路徑
      */
-    public Path transform(Path source,
-                                  Path resultDir,
-                                  Path exceptionDir) {
+    public Path convert (Path source,
+                         Path resultDir,
+                         Path exceptionDir) {
         // yml 檔路徑
         Path resultPath = null;
         // txt 檔路徑
@@ -63,7 +63,7 @@ public class ExcelToYmlConverter {
         result.append(YML_HEADER);
 
         // 創建 StringBuilder 儲存結果記錄
-        StringBuilder resultLog = new StringBuilder();
+        StringBuilder exceptionLog = new StringBuilder();
 
         // 記錄成功、失敗和總和筆數
         int success = 0;
@@ -97,7 +97,7 @@ public class ExcelToYmlConverter {
 
                 if (row == null) { // 空白列
                     // 記錄錯誤
-                    exceptionLogBuilder.buildResultLog(resultLog, i + 1, tableName, LOG_LOST_ROW);
+                    exceptionLogBuilder.build(exceptionLog, i + 1, tableName, LOG_LOST_ROW);
                     // 失敗記數
                     failed++;
 
@@ -112,7 +112,7 @@ public class ExcelToYmlConverter {
 
                     if (cell == null) { // 空白欄
                         // 記錄錯誤
-                        exceptionLogBuilder.buildResultLog(resultLog, i + 1, tableName, LOG_LOST_CELL);
+                        exceptionLogBuilder.build(exceptionLog, i + 1, tableName, LOG_LOST_CELL);
                         // 失敗記數
                         failed++;
 
@@ -123,11 +123,11 @@ public class ExcelToYmlConverter {
                     // 取得關鍵字串
                     switch (j) {
                         case 0 -> { // 資料表名稱
-                            tableName = Util.clearStr(formatter.formatCellValue(cell));
+                            tableName = StringUtil.clearStr(formatter.formatCellValue(cell));
 
                             if (StringUtils.isEmpty(tableName)) { // 資料表名稱 為空
                                 // 記錄錯誤
-                                exceptionLogBuilder.buildResultLog(resultLog, i + 1, tableName, LOG_LOST_TABLE_NAME);
+                                exceptionLogBuilder.build(exceptionLog, i + 1, tableName, LOG_LOST_TABLE_NAME);
                                 // 失敗記數
                                 failed++;
 
@@ -140,11 +140,11 @@ public class ExcelToYmlConverter {
                         }
 
                         case 1 -> { // oracle SQL語法 (移除換行符與非法空格)
-                            oraSql = Util.clearStr(formatter.formatCellValue(cell));
+                            oraSql = StringUtil.clearStr(formatter.formatCellValue(cell));
 
                             if (StringUtils.isEmpty(oraSql)) { // oracle SQL語法 為空
                                 // 記錄錯誤
-                                exceptionLogBuilder.buildResultLog(resultLog, i + 1, tableName, LOG_LOST_SQL);
+                                exceptionLogBuilder.build(exceptionLog, i + 1, tableName, LOG_LOST_SQL);
                                 // 失敗記數
                                 failed++;
 
@@ -154,11 +154,11 @@ public class ExcelToYmlConverter {
                         }
 
                         case 2 -> { // informix SQL語法 (移除換行符與非法空格)
-                            ifxSql = Util.clearStr(formatter.formatCellValue(cell));
+                            ifxSql = StringUtil.clearStr(formatter.formatCellValue(cell));
 
                             if (StringUtils.isEmpty(ifxSql)) { // informix SQL語法 為空
                                 // 記錄錯誤
-                                exceptionLogBuilder.buildResultLog(resultLog, i + 1, tableName, LOG_LOST_SQL);
+                                exceptionLogBuilder.build(exceptionLog, i + 1, tableName, LOG_LOST_SQL);
                                 // 失敗記數
                                 failed++;
 
@@ -170,7 +170,7 @@ public class ExcelToYmlConverter {
                 }
 
                 // 組裝結果字串
-                resultBuilder.buildResult(result, tableName, oraSql, ifxSql);
+                resultBuilder.build(result, tableName, oraSql, ifxSql);
                 // 成功記數
                 success++;
             }
@@ -184,15 +184,15 @@ public class ExcelToYmlConverter {
             // 統計成功失敗與總數
             total = success + failed;
 
-            // resultLog 有內容
-            if (!resultLog.isEmpty()) {
+            // exceptionLog 有內容
+            if (!exceptionLog.isEmpty()) {
                 // 加上統計結果
-                resultBuilder.addCountToLog(resultLog, failed, success, total);
+                exceptionLogBuilder.addCountToLog(exceptionLog, failed, success, total);
 
                 // 取得 txt 檔路徑
                 exceptionPath = exceptionDir.resolve(systemName + "_exception.txt");
                 // 輸出錯誤結果 txt 檔
-                Files.writeString(exceptionPath, resultLog.toString(), StandardCharsets.UTF_8);
+                Files.writeString(exceptionPath, exceptionLog.toString(), StandardCharsets.UTF_8);
                 log.info("============================> {} txt 輸出完成！",  systemName);
             }
         } catch (Exception e) {

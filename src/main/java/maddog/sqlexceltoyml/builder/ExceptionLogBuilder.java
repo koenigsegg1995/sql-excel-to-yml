@@ -10,7 +10,7 @@ public class ExceptionLogBuilder {
     /**
      * 錯誤記錄
      *
-     * @param resultLog
+     * @param exceptionLog
      *          當前錯誤記錄字串
      * @param rowNum
      *          excel 列號
@@ -19,21 +19,50 @@ public class ExceptionLogBuilder {
      * @param description
      *          錯誤內容描述
      */
-    public void buildResultLog(StringBuilder resultLog,
-                               int rowNum,
-                               String tableName,
-                               String description) {
+    public void build (StringBuilder exceptionLog,
+                       int rowNum,
+                       String tableName,
+                       String description) {
         // excel 列號
-        resultLog.append(LOG_ROW_NUM_ROW);
-        resultLog.append(rowNum).append("\n");
+        exceptionLog.append(LOG_ROW_NUM_ROW);
+        exceptionLog.append(rowNum).append("\n");
 
         // 資料表名稱
-        resultLog.append(LOG_TABLE_NAME_ROW);
-        resultLog.append(tableName).append("\n");
+        exceptionLog.append(LOG_TABLE_NAME_ROW);
+        exceptionLog.append(tableName).append("\n");
 
         // 錯誤內容描述
-        resultLog.append(LOG_DESCRIPTION_ROW);
-        resultLog.append(description).append("\n");
+        exceptionLog.append(LOG_DESCRIPTION_ROW);
+        exceptionLog.append(description).append("\n");
+    }
+
+    /**
+     * 加上統計結果
+     *
+     * @param exceptionLog
+     *          當前錯誤記錄字串
+     * @param failed
+     *          失敗數
+     * @param success
+     *          成功數
+     * @param total
+     *          總數
+     */
+    public void addCountToLog (StringBuilder exceptionLog,
+                               int failed,
+                               int success,
+                               int total) {
+        // 失敗數
+        exceptionLog.append(LOG_FAILED_ROW);
+        exceptionLog.append(failed).append("\n");
+
+        // 成功數
+        exceptionLog.append(LOG_SUCCESS_ROW);
+        exceptionLog.append(success).append("\n");
+
+        // 總數
+        exceptionLog.append(LOG_TOTAL_ROW);
+        exceptionLog.append(total).append("\n");
     }
 
 }

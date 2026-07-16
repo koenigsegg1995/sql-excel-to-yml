@@ -2,7 +2,7 @@ package maddog.sqlexceltoyml;
 
 import lombok.extern.slf4j.Slf4j;
 import maddog.sqlexceltoyml.converter.ExcelToYmlConverter;
-import maddog.sqlexceltoyml.util.Util;
+import maddog.sqlexceltoyml.util.StringUtil;
 import maddog.sqlexceltoyml.validator.YmlValidator;
 
 import java.io.IOException;
@@ -62,13 +62,13 @@ public class Application {
             // 將每個檔案進行轉換且驗證
             for (Path source : sourcePathList) {
                 // 讀取 excel 轉換成 yml
-                Path resultPath = excelToYmlConverter.transform(source, resultDir, exceptionDir);
+                Path resultPath = excelToYmlConverter.convert(source, resultDir, exceptionDir);
 
                 if (resultPath != null) {
                     // 驗證 yml 檔是否合法
                     ymlValidator.validate(resultPath);
                 } else {
-                    log.warn("{} transform 失敗回傳 null ，跳過驗證步驟！", Util.getBaseName(source.getFileName().toString()));
+                    log.warn("{} convert 失敗回傳 null ，跳過驗證步驟！", StringUtil.getBaseName(source.getFileName().toString()));
                 }
             }
         } catch (Exception e) {
