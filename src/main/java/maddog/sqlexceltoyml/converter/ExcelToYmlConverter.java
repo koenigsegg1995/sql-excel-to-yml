@@ -69,11 +69,6 @@ public class ExcelToYmlConverter {
 
             // 遍歷每一列
             for (int i = 1; i <= lastRowNum; i++) {
-                // 資料表名稱, oracle SQL語法, informix SQL語法
-                String tableName = "";
-                String ifxSql = "";
-                String oraSql = "";
-
                 // 取得該 index Row
                 Row row = sheet.getRow(i);
 
@@ -89,65 +84,41 @@ public class ExcelToYmlConverter {
 
                 // 0: 資料表名稱
                 Cell tableNameCell = row.getCell(0);
-                if (tableNameCell == null) { // 空白欄
+                String tableName = SqlUtil.cleanSql(formatter.formatCellValue(tableNameCell));
+
+                if (StringUtils.isEmpty(tableName)) { // 資料表名稱 為空
                     // 記錄錯誤描述
                     description.append(LOG_LOST_TABLE_NAME).append(" ");
 
                     // 空白計數
                     blankCellCount++;
                 } else {
-                    tableName = SqlUtil.cleanSql(formatter.formatCellValue(tableNameCell));
-
-                    if (StringUtils.isEmpty(tableName)) { // 資料表名稱 為空
-                        // 記錄錯誤描述
-                        description.append(LOG_LOST_TABLE_NAME).append(" ");
-
-                        // 空白計數
-                        blankCellCount++;
-                    } else {
-                        // 取得系統名，只賦值一次，依照 資料表名稱 習慣，第一個底線前應為系統名
-                        systemName = DEFAULT_SYSTEM_NAME.equals(systemName) ? tableName.split("_")[0] : systemName;
-                    }
+                    // 取得系統名，只賦值一次，依照 資料表名稱 習慣，第一個底線前應為系統名
+                    systemName = DEFAULT_SYSTEM_NAME.equals(systemName) ? tableName.split("_")[0] : systemName;
                 }
 
                 // 1: oracle SQL語法
                 Cell oraCell = row.getCell(1);
-                if (oraCell == null) { // 空白欄
+                String oraSql = SqlUtil.cleanSql(formatter.formatCellValue(oraCell));
+
+                if (StringUtils.isEmpty(oraSql)) { // oracle SQL語法 為空
                     // 記錄錯誤描述
                     description.append(LOG_LOST_ORA_SQL).append(" ");
 
                     // 空白計數
                     blankCellCount++;
-                } else {
-                    oraSql = SqlUtil.cleanSql(formatter.formatCellValue(oraCell));
-
-                    if (StringUtils.isEmpty(oraSql)) { // oracle SQL語法 為空
-                        // 記錄錯誤描述
-                        description.append(LOG_LOST_ORA_SQL).append(" ");
-
-                        // 空白計數
-                        blankCellCount++;
-                    }
                 }
 
                 // 2: informix SQL語法
                 Cell ifxCell = row.getCell(2);
-                if (ifxCell == null) { // 空白欄
+                String ifxSql = SqlUtil.cleanSql(formatter.formatCellValue(ifxCell));
+
+                if (StringUtils.isEmpty(ifxSql)) { // informix SQL語法 為空
                     // 記錄錯誤描述
                     description.append(LOG_LOST_IFX_SQL).append(" ");
 
                     // 空白計數
                     blankCellCount++;
-                } else {
-                    ifxSql = SqlUtil.cleanSql(formatter.formatCellValue(ifxCell));
-
-                    if (StringUtils.isEmpty(ifxSql)) { // informix SQL語法 為空
-                        // 記錄錯誤描述
-                        description.append(LOG_LOST_IFX_SQL).append(" ");
-
-                        // 空白計數
-                        blankCellCount++;
-                    }
                 }
 
                 if (blankCellCount == 0) { // 無錯誤
