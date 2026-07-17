@@ -87,75 +87,66 @@ public class ExcelToYmlConverter {
                 // 錯誤描述
                 StringBuilder description = new StringBuilder();
 
-                // 遍歷三個欄位 (0: 資料表名稱, 1: oracle SQL語法, 2: informix SQL語法
-                for (int j = 0; j < 3; j++) {
-                    // 取得該 index Cell
-                    Cell cell = row.getCell(j);
+                // 0: 資料表名稱
+                Cell tableNameCell = row.getCell(0);
+                if (tableNameCell == null) { // 空白欄
+                    // 記錄錯誤描述
+                    description.append(LOG_LOST_TABLE_NAME).append(" ");
 
-                    // 取得關鍵字串
-                    switch (j) {
-                        case 0 -> { // 資料表名稱
-                            if (cell == null) { // 空白欄
-                                // 記錄錯誤描述
-                                description.append(LOG_LOST_TABLE_NAME).append(" ");
+                    // 空白計數
+                    blankCellCount++;
+                } else {
+                    tableName = SqlUtil.cleanSql(formatter.formatCellValue(tableNameCell));
 
-                                // 空白計數
-                                blankCellCount++;
-                            } else {
-                                tableName = SqlUtil.cleanSql(formatter.formatCellValue(cell));
+                    if (StringUtils.isEmpty(tableName)) { // 資料表名稱 為空
+                        // 記錄錯誤描述
+                        description.append(LOG_LOST_TABLE_NAME).append(" ");
 
-                                if (StringUtils.isEmpty(tableName)) { // 資料表名稱 為空
-                                    // 記錄錯誤描述
-                                    description.append(LOG_LOST_TABLE_NAME).append(" ");
+                        // 空白計數
+                        blankCellCount++;
+                    } else {
+                        // 取得系統名，只賦值一次，依照 資料表名稱 習慣，第一個底線前應為系統名
+                        systemName = DEFAULT_SYSTEM_NAME.equals(systemName) ? tableName.split("_")[0] : systemName;
+                    }
+                }
 
-                                    // 空白計數
-                                    blankCellCount++;
-                                }
+                // 1: oracle SQL語法
+                Cell oraCell = row.getCell(1);
+                if (oraCell == null) { // 空白欄
+                    // 記錄錯誤描述
+                    description.append(LOG_LOST_ORA_SQL).append(" ");
 
-                                // 取得系統名，只賦值一次，依照 資料表名稱 習慣，第一個底線前應為系統名
-                                systemName = DEFAULT_SYSTEM_NAME.equals(systemName) ? tableName.split("_")[0] : systemName;
-                            }
-                        }
+                    // 空白計數
+                    blankCellCount++;
+                } else {
+                    oraSql = SqlUtil.cleanSql(formatter.formatCellValue(oraCell));
 
-                        case 1 -> { // oracle SQL語法 (移除換行符與非法空格)
-                            if (cell == null) { // 空白欄
-                                // 記錄錯誤描述
-                                description.append(LOG_LOST_ORA_SQL).append(" ");
+                    if (StringUtils.isEmpty(oraSql)) { // oracle SQL語法 為空
+                        // 記錄錯誤描述
+                        description.append(LOG_LOST_ORA_SQL).append(" ");
 
-                                // 空白計數
-                                blankCellCount++;
-                            } else {
-                                oraSql = SqlUtil.cleanSql(formatter.formatCellValue(cell));
+                        // 空白計數
+                        blankCellCount++;
+                    }
+                }
 
-                                if (StringUtils.isEmpty(oraSql)) { // oracle SQL語法 為空
-                                    // 記錄錯誤描述
-                                    description.append(LOG_LOST_ORA_SQL).append(" ");
+                // 2: informix SQL語法
+                Cell ifxCell = row.getCell(2);
+                if (ifxCell == null) { // 空白欄
+                    // 記錄錯誤描述
+                    description.append(LOG_LOST_IFX_SQL).append(" ");
 
-                                    // 空白計數
-                                    blankCellCount++;
-                                }
-                            }
-                        }
+                    // 空白計數
+                    blankCellCount++;
+                } else {
+                    ifxSql = SqlUtil.cleanSql(formatter.formatCellValue(ifxCell));
 
-                        case 2 -> { // informix SQL語法 (移除換行符與非法空格)
-                            if (cell == null) { // 空白欄
-                                // 記錄錯誤描述
-                                description.append(LOG_LOST_IFX_SQL).append(" ");
+                    if (StringUtils.isEmpty(ifxSql)) { // informix SQL語法 為空
+                        // 記錄錯誤描述
+                        description.append(LOG_LOST_IFX_SQL).append(" ");
 
-                                // 空白計數
-                                blankCellCount++;
-                            } else {
-                                ifxSql = SqlUtil.cleanSql(formatter.formatCellValue(cell));
-
-                                if (StringUtils.isEmpty(ifxSql)) { // informix SQL語法 為空
-                                    // 記錄錯誤描述
-                                    description.append(LOG_LOST_IFX_SQL).append(" ");
-
-                                    // 空白計數
-                                    blankCellCount++;
-                                }
-                            }
-                        }
+                        // 空白計數
+                        blankCellCount++;
                     }
                 }
 
@@ -167,7 +158,7 @@ public class ExcelToYmlConverter {
                     success++;
                 } else if (blankCellCount != 3) { // 非空白列
                     // 記錄錯誤
-                    exceptionLogBuilder.addLog(i + 1, tableName, description);
+                    exceptionLogBuilder.addLog(i + 1, tableName, description.toString().trim());
 
                     // 失敗計數
                     failed++;

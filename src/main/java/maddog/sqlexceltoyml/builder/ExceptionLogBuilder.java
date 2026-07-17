@@ -31,7 +31,7 @@ public class ExceptionLogBuilder {
      */
     public void addLog (int rowNum,
                         String tableName,
-                        StringBuilder description) {
+                        String description) {
         // excel 列號
         exceptionLog.append(LOG_ROW_NUM_ROW);
         exceptionLog.append(rowNum).append("\n");
