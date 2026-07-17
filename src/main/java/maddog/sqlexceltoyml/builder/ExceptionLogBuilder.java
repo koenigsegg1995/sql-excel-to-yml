@@ -3,15 +3,25 @@ package maddog.sqlexceltoyml.builder;
 import static maddog.sqlexceltoyml.constant.YmlConstant.*;
 
 /**
- * 組裝錯誤記錄
+ * 組裝錯誤紀錄
  */
 public class ExceptionLogBuilder {
 
     /**
+     * 當前錯誤紀錄字串
+     */
+    private final StringBuilder exceptionLog;
+
+    /**
+     * 初始化取得 StringBuilder 容器
+     */
+    public ExceptionLogBuilder() {
+        exceptionLog = new StringBuilder();
+    }
+
+    /**
      * 錯誤記錄
      *
-     * @param exceptionLog
-     *          當前錯誤記錄字串
      * @param rowNum
      *          excel 列號
      * @param tableName
@@ -19,10 +29,9 @@ public class ExceptionLogBuilder {
      * @param description
      *          錯誤內容描述
      */
-    public void build (StringBuilder exceptionLog,
-                       int rowNum,
-                       String tableName,
-                       String description) {
+    public void addLog (int rowNum,
+                        String tableName,
+                        String description) {
         // excel 列號
         exceptionLog.append(LOG_ROW_NUM_ROW);
         exceptionLog.append(rowNum).append("\n");
@@ -39,8 +48,6 @@ public class ExceptionLogBuilder {
     /**
      * 加上統計結果
      *
-     * @param exceptionLog
-     *          當前錯誤記錄字串
      * @param failed
      *          失敗數
      * @param success
@@ -48,10 +55,9 @@ public class ExceptionLogBuilder {
      * @param total
      *          總數
      */
-    public void addCountToLog (StringBuilder exceptionLog,
-                               int failed,
-                               int success,
-                               int total) {
+    public void addCount (int failed,
+                          int success,
+                          int total) {
         // 失敗數
         exceptionLog.append(LOG_FAILED_ROW);
         exceptionLog.append(failed).append("\n");
@@ -63,6 +69,24 @@ public class ExceptionLogBuilder {
         // 總數
         exceptionLog.append(LOG_TOTAL_ROW);
         exceptionLog.append(total).append("\n");
+    }
+
+    /**
+     * 是否有資料
+     *
+     * @return 是/否
+     */
+    public boolean isEmpty (){
+        return exceptionLog.isEmpty();
+    }
+
+    /**
+     * 取得結果 LOG 字串
+     *
+     * @return 結果 LOG 字串
+     */
+    public String getLog () {
+        return exceptionLog.toString();
     }
 
 }
