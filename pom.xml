@@ -65,6 +65,8 @@
     </dependencies>
 
     <build>
+        <finalName>sql-excel-to-yml</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

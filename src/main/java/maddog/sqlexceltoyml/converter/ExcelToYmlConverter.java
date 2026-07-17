@@ -169,6 +169,7 @@ public class ExcelToYmlConverter {
 
             // exceptionLog 有內容
             if (!exceptionLogBuilder.isEmpty()) {
+                log.warn("{} 有錯誤，將輸出 exception txt", systemName);
                 // 加上統計結果
                 exceptionLogBuilder.addCount(failed, success, total);
 
