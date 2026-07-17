@@ -63,23 +63,18 @@ public final class YmlConstant {
     public static final String LOG_TOTAL_ROW = "total: ";
 
     /**
-     * txt Log description "空白列"
-     */
-    public static final String LOG_LOST_ROW = "空白列";
-
-    /**
      * txt Log description "資料表名稱為空"
      */
     public static final String LOG_LOST_TABLE_NAME = "資料表名稱為空";
 
     /**
-     * txt Log description "欄位為空"
+     * txt Log description "oracle SQL 為空"
      */
-    public static final String LOG_LOST_CELL = "欄位為空";
+    public static final String LOG_LOST_ORA_SQL = "oracle SQL 為空";
 
     /**
-     * txt Log description "SQL 為空"
+     * txt Log description "informix SQL 為空"
      */
-    public static final String LOG_LOST_SQL = "SQL 為空";
+    public static final String LOG_LOST_IFX_SQL = "informix SQL 為空";
     
 }

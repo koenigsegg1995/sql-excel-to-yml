@@ -15,7 +15,7 @@ public final class SqlUtil {
      * @return cleanSql
      *          合法字串 (基於合法 tableName 不會換行，僅用於去除頭尾空格)
      */
-    public static String clearSql (String oriSql) {
+    public static String cleanSql (String oriSql) {
         return oriSql
                 .replaceAll("[\\r\\n\\t\\u00A0]+", " ")
                 .trim();
