@@ -1,0 +1,2 @@
+打包 exe - 
+jpackage --type app-image --name SqlExcelToYml --input D:\staging --main-jar sql-excel-to-yml-1.0-SNAPSHOT.jar --dest D:\dist
